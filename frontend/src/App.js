@@ -1,14 +1,23 @@
 import React from 'react';
-import FileUpload from './components/FileUpload';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from './pages/Home';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Data Visualizer</h1>
-        <FileUpload />
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/'>
+          <Route index element={<Home />} />
+          <Route path="Signup" element={<Signup />} />
+          <Route path="Login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+
   );
 }
 
