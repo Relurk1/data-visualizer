@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import SelectChart from './pages/SelectChart';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="Signup" element={<Signup />} />
           <Route path="Login" element={<Login />} />
+          <Route path='Select' element={<SelectChart />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -12,7 +12,7 @@ function Home() {
           <h1>Chartify</h1>
         </div>
         <div className='grid-item-2'>
-          <p>Quicky generate beautiful visualizations from csv data, without any of the fuss</p>
+          <h3>Quicky generate beautiful visualizations from csv data, without any of the fuss</h3>
         </div>
         <div className='grid-item-3'>
           <FileUpload />

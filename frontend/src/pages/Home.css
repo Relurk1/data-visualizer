@@ -5,12 +5,14 @@
   grid-template-rows: repeat(3, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+  column-gap: 5rem;
 }
 
 .App-body *{
   text-align: center;
   color: var(--text-color);
   font-family: var(--font-family), sans-serif;
+  margin: 1rem;
 }
 
 .grid-item-1 {
