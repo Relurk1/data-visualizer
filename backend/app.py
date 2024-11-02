@@ -29,7 +29,7 @@ def upload_file():
     visual = CSVVisualizer(file_path)
     file_registry[file_id] = visual
 
-    return jsonify({'file_id': file_id, 'columns': visual.get_columns()}), 200
+    return jsonify({'file_id': file_id}), 200
 
 
 
