@@ -1,49 +1,37 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function FileUpload() {
+function UploadPage() {
   const [file, setFile] = useState(null);
-  const [uploadResult, setUploadResult] = useState(null);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
+    console.log("changing file")
     setFile(e.target.files[0]);
   };
 
   const handleUpload = () => {
-    if (!file) return;
-
     const formData = new FormData();
     formData.append('file', file);
-
-    axios.post('http://localhost:5000/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(response => {
-      setUploadResult(response.data);
-    })
-    .catch(error => {
-      console.error('Error uploading file:', error);
-    });
+    console.log("sending file to backend now")
+    axios.post('http://localhost:5000/api/upload', formData)
+      .then(response => {
+        const fileId = response.data.file_id;
+        navigate(`/select/${fileId}`);  // Navigate to the visualization page
+      })
+      .catch(error => {
+        console.error('Upload error:', error);
+      });
   };
 
   return (
     <div>
       <h2>Upload CSV File</h2>
-      <input type="file" accept=".csv" onChange={handleFileChange} />
+      <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
-
-      {uploadResult && (
-        <div>
-          <h3>CSV Data Summary:</h3>
-          <p>Columns: {uploadResult.columns.join(', ')}</p>
-          <h4>First Few Rows:</h4>
-          <pre>{JSON.stringify(uploadResult.head, null, 2)}</pre>
-        </div>
-      )}
     </div>
   );
 }
 
-export default FileUpload;
+export default UploadPage;
