@@ -15,7 +15,7 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="nav-left">
-                <a href="/" className="logo-link"><img src="Logo.png" alt="The Chartify Logo" className="logo"/></a>
+                <a href="/" className="logo-link"><img src="/Logo.png" alt="The Chartify Logo" className="logo"/></a>
             </div>
             <div className="nav-right">
                 <button className="btn btn-primary m-2" onClick={handleLogin}>Login</button>
