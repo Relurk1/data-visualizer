@@ -15,6 +15,7 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path="login" element={<Login />} />
           <Route path='select/:fileId' element={<SelectChart />} />
+          <Route path='select/test' element={<SelectChart />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

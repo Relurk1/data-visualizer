@@ -12,31 +12,31 @@ function SelectChart() {
             <div className='grid-container'>
                 <div className='grid-item'>
                     <h6>Plot</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/plot"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Scatter</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/scatter"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Bar</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/bar"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Stem</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/stem"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Fill Between</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/fill-between"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Stack Plot</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/stack-plot"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Stairs</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/stairs"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
             </div>
 
@@ -44,39 +44,39 @@ function SelectChart() {
             <div className='grid-container'>
                 <div className='grid-item'>
                     <h6>Histogram</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/histogram"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Box Plot</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/box-plot"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Error Bars</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/error-bars"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Violin Plot</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/violin-plot"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Event Plot</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/event-plot"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>2D Histogram</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/2d-histogram"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Hexbin</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/hexbin"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>Pie Chart</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/pie-chart"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
                 <div className='grid-item'>
                     <h6>ECDF</h6>
-                    <img alt='' src='/Placeholder.webp'></img>
+                    <a href="/ecdf"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
             </div>
         </div>
