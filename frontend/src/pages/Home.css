@@ -1,3 +1,4 @@
+
 .App-body {
   margin: 2rem;
   padding: 1rem;
@@ -15,19 +16,19 @@
   margin: 1rem;
 }
 
-.grid-item-1 {
+.grid-item-1-home {
   grid-area: 1 / 1 / 2 / 2; 
 }
 
-.grid-item-2 { 
+.grid-item-2-home { 
   grid-area: 2 / 1 / 4 / 2; 
 }
 
-.grid-item-3 { 
+.grid-item-3-home { 
   grid-area: 4 / 1 / 5 / 2; 
 }
 
-.grid-item-4 { 
+.grid-item-4-home { 
   grid-area: 1 / 2 / 5 / 3; 
 } 
 

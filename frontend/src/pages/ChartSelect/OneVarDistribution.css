@@ -1,0 +1,37 @@
+.grid-container-svardist {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    row-gap: 5rem;
+}
+
+.grid-item-1-svardist {
+    grid-column: 1 / span 3;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-item-2-svardist {
+    grid-column: 2 / span 1;
+    width: 100%;
+
+}
+
+.grid-item-3-svardist {
+    grid-column: 1 / span 3;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-item-4-svardist {
+    grid-column: 2 / span 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

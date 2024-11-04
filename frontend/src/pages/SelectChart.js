@@ -2,6 +2,8 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import './SelectChart.css';
 
+//TODO - uncomment charts as implemented in backend
+
 function SelectChart() {
     return (
         <div className='Select'>
@@ -9,20 +11,20 @@ function SelectChart() {
             <h1>Select Visualization</h1>
 
             <h2>Pairwise</h2>
-            <div className='grid-container'>
-                <div className='grid-item'>
+            <div className='grid-container-select'>
+                <div className='grid-item-select'>
                     <h6>Plot</h6>
-                    <a href="/plot"><img alt='' src='/Placeholder.webp'></img></a>
+                    <a href="/plot"><img alt='A line plot' src='/Placeholder.png'></img></a>
                 </div>
-                <div className='grid-item'>
+                <div className='grid-item-select'>
                     <h6>Scatter</h6>
-                    <a href="/scatter"><img alt='' src='/Placeholder.webp'></img></a>
+                    <a href="/scatter"><img alt='A scatter plot' src='/Scatter.png'></img></a>
                 </div>
-                <div className='grid-item'>
+                <div className='grid-item-select'>
                     <h6>Bar</h6>
-                    <a href="/bar"><img alt='' src='/Placeholder.webp'></img></a>
+                    <a href="/bar"><img alt='A bar chart' src='/bar.png'></img></a>
                 </div>
-                <div className='grid-item'>
+                {/* <div className='grid-item'>
                     <h6>Stem</h6>
                     <a href="/stem"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
@@ -37,20 +39,20 @@ function SelectChart() {
                 <div className='grid-item'>
                     <h6>Stairs</h6>
                     <a href="/stairs"><img alt='' src='/Placeholder.webp'></img></a>
-                </div>
+                </div> */}
             </div>
 
-            <h2>Statistical Distribution</h2>
-            <div className='grid-container'>
-                <div className='grid-item'>
+            <h2 className="header-2-select">Statistical Distribution</h2>
+            <div className='grid-container-select'>
+                <div className='grid-item-select'>
                     <h6>Histogram</h6>
-                    <a href="/histogram"><img alt='' src='/Placeholder.webp'></img></a>
+                    <a href="/histogram"><img alt='' src='/Histogram.png'></img></a>
                 </div>
-                <div className='grid-item'>
+                <div className='grid-item-select'>
                     <h6>Box Plot</h6>
-                    <a href="/box-plot"><img alt='' src='/Placeholder.webp'></img></a>
+                    <a href="/box-plot"><img alt='' src='/Box.png'></img></a>
                 </div>
-                <div className='grid-item'>
+                {/* <div className='grid-item'>
                     <h6>Error Bars</h6>
                     <a href="/error-bars"><img alt='' src='/Placeholder.webp'></img></a>
                 </div>
@@ -77,7 +79,7 @@ function SelectChart() {
                 <div className='grid-item'>
                     <h6>ECDF</h6>
                     <a href="/ecdf"><img alt='' src='/Placeholder.webp'></img></a>
-                </div>
+                </div> */}
             </div>
         </div>
     )
