@@ -1,10 +1,14 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import './SelectChart.css';
+import { useParams } from 'react-router-dom';   
+import { Link } from 'react-router-dom';
 
 //TODO - uncomment charts as implemented in backend
 
 function SelectChart() {
+    const { fileId } = useParams();
+
     return (
         <div className='Select'>
             <Navbar />
@@ -14,15 +18,21 @@ function SelectChart() {
             <div className='grid-container-select'>
                 <div className='grid-item-select'>
                     <h6>Plot</h6>
-                    <a href="/plot"><img alt='A line plot' src='/Placeholder.png'></img></a>
+                    <Link to={`/plot/${fileId}`}>
+                        <img alt='A line plot' src='/Placeholder.png' />
+                    </Link>
                 </div>
                 <div className='grid-item-select'>
                     <h6>Scatter</h6>
-                    <a href="/scatter"><img alt='A scatter plot' src='/Scatter.png'></img></a>
+                    <Link to={`/scatter/${fileId}`}>
+                        <img alt='A scatter plot' src='/Scatter.png' />
+                    </Link>
                 </div>
                 <div className='grid-item-select'>
                     <h6>Bar</h6>
-                    <a href="/bar"><img alt='A bar chart' src='/bar.png'></img></a>
+                    <Link to={`/bar/${fileId}`}>
+                        <img alt='A bar chart' src='/bar.png' />
+                    </Link>
                 </div>
                 {/* <div className='grid-item'>
                     <h6>Stem</h6>
@@ -46,11 +56,15 @@ function SelectChart() {
             <div className='grid-container-select'>
                 <div className='grid-item-select'>
                     <h6>Histogram</h6>
-                    <a href="/histogram"><img alt='' src='/Histogram.png'></img></a>
+                    <Link to={`/histogram/${fileId}`}>
+                        <img alt='A histogram plot' src='/Histogram.png' />
+                    </Link>
                 </div>
                 <div className='grid-item-select'>
                     <h6>Box Plot</h6>
-                    <a href="/box-plot"><img alt='' src='/Box.png'></img></a>
+                    <Link to={`/box/${fileId}`}>
+                        <img alt='A box plot' src='/Box.png' />
+                    </Link>
                 </div>
                 {/* <div className='grid-item'>
                     <h6>Error Bars</h6>

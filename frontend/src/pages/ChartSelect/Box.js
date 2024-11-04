@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, Button } from '@mui/material';
 import Navbar from '../../components/Navbar';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import "./OneVarDistribution.css";
 
 function Box() {
-  // State variables for dropdowns
-  const [dropdown1, setDropdown1] = useState('');
-  
-  // State variables for toggles
+  const { fileId } = useParams(); // Get fileId from URL
+  const [columns, setColumns] = useState([]); // State to store column names
+  const [dropdown1, setDropdown1] = useState(''); // State for selected variable
   const [toggle1, setToggle1] = useState(false);
   const [toggle2, setToggle2] = useState(false);
   const [toggle3, setToggle3] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch column names from the backend
+    axios.get(`http://localhost:5000/api/columns/${fileId}`)
+      .then(response => {
+        setColumns(response.data.columns);
+      })
+      .catch(error => {
+        console.error("Error fetching columns:", error);
+      });
+  }, [fileId]);
 
   // Handlers for dropdowns
   const handleDropdown1Change = (event) => setDropdown1(event.target.value);
@@ -20,6 +34,28 @@ function Box() {
   const handleToggle2Change = (event) => setToggle2(event.target.checked);
   const handleToggle3Change = (event) => setToggle3(event.target.checked);
 
+  const handleSubmit = () => {
+    // Prepare data to send to the backend
+    const payload = {
+      Id : fileId,
+      var_amt : '1',
+      chartType: "box",
+      x_col: dropdown1,
+      displayAxisNames: toggle1,
+      displayTitle: toggle2,
+      generateStatistics: toggle3,
+    };
+
+    axios.post(`http://localhost:5000/api/chart`, payload)
+      .then(response => {
+        // Navigate to the ViewChart component with the chart ID
+        navigate(`/view_chart/${fileId}`);
+      })
+      .catch(error => {
+        console.error("Error generating chart:", error);
+      });
+  }
+  
   return (
     <div className="plot">
       <Navbar />
@@ -30,13 +66,12 @@ function Box() {
         <FormControl fullWidth margin="normal" className="grid-item-2-svardist">
             <InputLabel>Tracked Variable</InputLabel>
             <Select value={dropdown1} onChange={handleDropdown1Change}>
-            <MenuItem value="option1">Option 1</MenuItem>
-            <MenuItem value="option2">Option 2</MenuItem>
-            <MenuItem value="option3">Option 3</MenuItem>
+              {columns.map((col, index) => (
+                <MenuItem key={index} value={col}>{col}</MenuItem>
+              ))}
             </Select>
         </FormControl>
         
-
         <div className='grid-item-3-svardist'>
             <FormControlLabel
                 control={<Switch checked={toggle1} onChange={handleToggle1Change} />}
@@ -46,16 +81,20 @@ function Box() {
                 control={<Switch checked={toggle2} onChange={handleToggle2Change} />}
                 label="Display Title"
             />
-
             <FormControlLabel
                 control={<Switch checked={toggle3} onChange={handleToggle3Change} />}
                 label="Generate Statistics"
             />
         </div>
 
-        
-        <Button variant="contained" color="primary" style={{ marginTop: '1rem' }} className="grid-item-4-svardist">
-            Submit
+        <Button 
+          variant="contained" 
+          color="primary" 
+          style={{ marginTop: '1rem' }} 
+          className="grid-item-5"
+          onClick={handleSubmit}
+        >
+          Submit
         </Button>
 
       </div>
