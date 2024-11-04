@@ -84,6 +84,16 @@ class CSVVisualizer:
             plt.boxplot(self.df[self.y_col], patch_artist=True, boxprops=dict(facecolor=self.color))
             plt.xticks([1], [self.y_col])
 
+        elif self.chart_type == "pie":
+            data_counts = self.df[self.x_col].value_counts()
+            plt.pie(data_counts, labels=data_counts.index, colors=plt.cm.Paired.colors, autopct='%1.1f%%')
+
+        elif self.chart_type == "heatmap":
+            if not np.issubdtype(self.df[self.x_col].dtype, np.number):
+                raise ValueError("Heatmap requires numeric columns.")
+            corr = self.df.corr()
+            sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
+
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
         plt.title(self.title)
