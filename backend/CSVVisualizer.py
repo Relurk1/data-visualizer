@@ -1,7 +1,8 @@
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns  # Seaborn for heatmap
 
 class CSVVisualizer:
     def __init__(self, file_path):
@@ -29,7 +30,7 @@ class CSVVisualizer:
 
     def set_chart_type(self, chart_type):
         """Set the type of chart."""
-        valid_chart_types = ['scatter', 'line', 'bar', 'histogram', 'box', 'pie', 'heatmap']
+        valid_chart_types = ['scatter', 'plot', 'bar', 'histogram', 'box']
         if chart_type in valid_chart_types:
             self.chart_type = chart_type
         else:
@@ -89,18 +90,12 @@ class CSVVisualizer:
         elif self.chart_type == "pie":
             data_counts = self.df[self.x_col].value_counts()
             plt.pie(data_counts, labels=data_counts.index, colors=plt.cm.Paired.colors, autopct='%1.1f%%')
-
-        elif self.chart_type == "heatmap":
-            if not np.issubdtype(self.df[self.x_col].dtype, np.number):
-                raise ValueError("Heatmap requires numeric columns.")
-            corr = self.df.corr()
-            sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
         
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
         plt.title(self.title)
         plt.legend()
-        plt.show()
+        # plt.show()
 
     def preview(self, rows=5):
         """Display a preview of the data."""
