@@ -59,12 +59,6 @@ class CSVVisualizer:
         return self
 
     def plot(self):
-        """Generate the plot based on current configuration."""
-        if self.chart_type != "pie" and (not self.x_col or not self.y_col):
-            raise ValueError("X and Y columns must be set before plotting.")
-        if self.chart_type == "pie" and not self.x_col:
-            raise ValueError("Only one column is needed for pie chart.")
-
         plt.figure(figsize=(8, 6))
 
         if self.chart_type == "scatter":
@@ -72,20 +66,16 @@ class CSVVisualizer:
             if self.include_line_of_best_fit:
                 m, b = np.polyfit(self.df[self.x_col], self.df[self.y_col], 1)
                 plt.plot(self.df[self.x_col], m * self.df[self.x_col] + b, color='red', linestyle='--', label='Line of Best Fit')
-
-        elif self.chart_type == "line":
-            sorted_df = self.df.sort_values(by=self.x_col)
-            plt.plot(sorted_df[self.x_col], sorted_df[self.y_col], color=self.color, label=self.legend)
-
+                oo
         elif self.chart_type == "bar":
             plt.bar(self.df[self.x_col], self.df[self.y_col], color=self.color, label=self.legend)
 
         elif self.chart_type == "histogram":
-            plt.hist(self.df[self.y_col], bins=30, color=self.color, alpha=0.7, label=self.legend)
+            plt.hist(self.df[self.x_col], bins=30, color=self.color, alpha=0.7, label=self.legend)
 
         elif self.chart_type == "box":
-            plt.boxplot(self.df[self.y_col], patch_artist=True, boxprops=dict(facecolor=self.color))
-            plt.xticks([1], [self.y_col])
+            plt.boxplot(self.df[self.x_col], patch_artist=True, boxprops=dict(facecolor=self.color))
+            plt.xticks([1], [self.x_col])
 
         elif self.chart_type == "pie":
             data_counts = self.df[self.x_col].value_counts()
