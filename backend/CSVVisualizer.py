@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns  # Seaborn for heatmap
 
 class CSVVisualizer:
     def __init__(self, file_path):
@@ -17,18 +18,18 @@ class CSVVisualizer:
         self.legend = ''
         self.include_line_of_best_fit = False
 
-    def select_columns(self, x_col, y_col):
+    def select_columns(self, x_col, y_col=None):
         """Set X and Y columns for plotting."""
-        if x_col in self.columns and y_col in self.columns:
+        if x_col in self.columns:
             self.x_col = x_col
-            self.y_col = y_col
+            self.y_col = y_col if y_col in self.columns else None
         else:
             raise ValueError("Selected columns not found in CSV")
         return self  # Enable method chaining
 
     def set_chart_type(self, chart_type):
         """Set the type of chart."""
-        valid_chart_types = ['scatter', 'line', 'bar', 'histogram', 'box']
+        valid_chart_types = ['scatter', 'line', 'bar', 'histogram', 'box', 'pie', 'heatmap']
         if chart_type in valid_chart_types:
             self.chart_type = chart_type
         else:
@@ -58,8 +59,10 @@ class CSVVisualizer:
 
     def plot(self):
         """Generate the plot based on current configuration."""
-        if not self.x_col or not self.y_col:
+        if self.chart_type != "pie" and (not self.x_col or not self.y_col):
             raise ValueError("X and Y columns must be set before plotting.")
+        if self.chart_type == "pie" and not self.x_col:
+            raise ValueError("Only one column is needed for pie chart.")
 
         plt.figure(figsize=(8, 6))
 
@@ -74,8 +77,7 @@ class CSVVisualizer:
             plt.plot(sorted_df[self.x_col], sorted_df[self.y_col], color=self.color, label=self.legend)
 
         elif self.chart_type == "bar":
-            y_data, x_data = self.df[self.y_col], self.df[self.x_col]
-            plt.bar(x_data, y_data, color=self.color, label=self.legend)
+            plt.bar(self.df[self.x_col], self.df[self.y_col], color=self.color, label=self.legend)
 
         elif self.chart_type == "histogram":
             plt.hist(self.df[self.y_col], bins=30, color=self.color, alpha=0.7, label=self.legend)
@@ -93,7 +95,7 @@ class CSVVisualizer:
                 raise ValueError("Heatmap requires numeric columns.")
             corr = self.df.corr()
             sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
-
+        
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
         plt.title(self.title)
@@ -104,4 +106,3 @@ class CSVVisualizer:
         """Display a preview of the data."""
         print(self.df.head(rows))
         return self
-
