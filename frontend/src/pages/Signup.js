@@ -1,77 +1,32 @@
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 
-function Signup({ onSignupSuccess }) {
+function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState('');
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
-      setMessage('Passwords do not match!');
-      setMessageType('danger');
+      alert('Passwords do not match!');
       return;
     }
-
-    if (!name || !email || !password) {
-      setMessage('All fields are required!');
-      setMessageType('danger');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage('Signup successful! Redirecting to your profile...');
-        setMessageType('success');
-
-        const user = { id: data.user?.id, name, email };
-        localStorage.setItem('user', JSON.stringify(user));
-
-        if (onSignupSuccess) {
-          onSignupSuccess(user);
-        }
-
-        setTimeout(() => {
-          navigate('/profile');
-        }, 1500);
-      } else {
-        setMessage(data.error || 'Signup failed! Please try again.');
-        setMessageType('danger');
-      }
-    } catch (error) {
-      setMessage('An unexpected error occurred. Please try again later.');
-      setMessageType('danger');
-    }
+    // Add your signup logic here
+    console.log('Signing up with:', { name, email, password });
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="w-50 p-3 border bg-white rounded">
         <h2 className="text-center mb-4">Sign Up</h2>
-        {message && <Alert variant={messageType}>{message}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicName">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter your name"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -82,7 +37,7 @@ function Signup({ onSignupSuccess }) {
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -93,7 +48,7 @@ function Signup({ onSignupSuccess }) {
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter your password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -104,7 +59,7 @@ function Signup({ onSignupSuccess }) {
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Re-enter your password"
+              placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
