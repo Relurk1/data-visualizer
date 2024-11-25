@@ -1,20 +1,57 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log('Logging in with:', { email, password });
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Login successful! Redirecting to your profile...');
+        setMessageType('success');
+
+        const user = { id: data.user.id, name: data.user.name, email: data.user.email };
+        localStorage.setItem('user', JSON.stringify(user));
+
+        if (onLoginSuccess) {
+          onLoginSuccess(user);
+        }
+
+        setTimeout(() => {
+          navigate('/profile');
+        }, 1500);
+      } else {
+        setMessage(data.message || 'Login failed! Please try again.');
+        setMessageType('danger');
+      }
+    } catch (error) {
+      setMessage('An unexpected error occurred. Please try again later.');
+      setMessageType('danger');
+    }
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="w-50 p-3 border bg-white rounded">
         <h2 className="text-center mb-4">Login</h2>
+        {message && <Alert variant={messageType}>{message}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
@@ -37,12 +74,10 @@ function Login() {
               required
             />
           </Form.Group>
-          <div className='text-center'>
-            <Button variant="primary" type="submit" className="mt-4 w-100">
-                Login
-            </Button>
-            <a href='/Signup'>No account? Sign up here!</a>
-          </div>
+
+          <Button variant="primary" type="submit" className="mt-4 w-100">
+            Login
+          </Button>
         </Form>
       </div>
     </div>

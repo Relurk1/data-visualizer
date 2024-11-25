@@ -11,6 +11,7 @@ import BarChart from './pages/ChartSelect/Bar';
 import Histogram from './pages/ChartSelect/Histogram'
 import Box from './pages/ChartSelect/Box'
 import ViewChart from './pages/ViewChart';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path='histogram/:fileId' element={<Histogram />} />
           <Route path='box/:fileId' element={<Box />} />
           <Route path='view_chart/:fileId' element={<ViewChart />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
