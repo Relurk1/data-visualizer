@@ -1,37 +1,55 @@
 .grid-container-svardist {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    row-gap: 5rem;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+    grid-template-rows: auto; /* Auto-adjust rows based on content */
+    gap: 2rem; /* Consistent spacing between items */
+    margin: 2rem 5rem; /* Add margin for padding around the grid */
+    align-items: start; /* Align items at the start */
 }
 
+/* Title Section */
 .grid-item-1-svardist {
-    grid-column: 1 / span 3;
-    width: 100%;
+    grid-column: 1 / span 3; /* Span across all columns */
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    font-size: 2rem; /* Larger font size for title */
+    font-weight: bold; /* Emphasize the title */
 }
 
+/* Dropdown Section */
 .grid-item-2-svardist {
-    grid-column: 2 / span 1;
-    width: 100%;
-
+    grid-column: 1 / span 3; /* Take full width across all columns */
+    display: flex;
+    justify-content: center; /* Center the dropdown */
+    align-items: center;
 }
 
+/* Input Fields Section */
 .grid-item-3-svardist {
-    grid-column: 1 / span 3;
-    width: 100%;
+    grid-column: 1 / span 3; /* Span across all columns */
     display: flex;
+    flex-direction: column; /* Stack input fields vertically */
+    gap: 1rem; /* Space between input fields */
     align-items: center;
-    justify-content: center;
+    width: 100%;
 }
 
+/* Color Picker Section */
 .grid-item-4-svardist {
-    grid-column: 2 / span 1;
-    width: 100%;
+    grid-column: 1 / span 3; /* Span across all columns */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    gap: 1rem; /* Space between label and color picker */
+}
+
+/* Submit Button Section */
+.grid-item-5-svardist {
+    grid-column: 1 / span 3; /* Span across all columns */
+    display: flex;
+    justify-content: center; /* Center the button */
+    align-items: center;
+    margin-top: 1rem; /* Add some space above the button */
 }
