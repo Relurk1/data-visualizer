@@ -23,6 +23,7 @@ class CSVVisualizer:
         """Set X and Y columns for plotting."""
         if x_col in self.columns:
             self.x_col = x_col
+            self.x_label = x_col
             self.y_col = y_col if y_col in self.columns else None
         else:
             raise ValueError("Selected columns not found in CSV")
@@ -95,12 +96,26 @@ class CSVVisualizer:
             }
         
         return stats
+    
+    def set_color(self, color):
+        """Set the color of the graph."""
+        self.color = color
+        return self
+    
+    
+    def set_labels(self, x_label, y_label, title, legend):
+        self.x_label = x_label or self.x_col
+        self.y_label = y_label or self.y_col
+        self.title = title
+        self.legend = legend
+        return self
+
 
     def plot(self):
         plt.figure(figsize=(8, 6))
 
         if self.chart_type == "scatter":
-            plt.scatter(self.df[self.x_col], self.df[self.y_col], color=self.color, alpha=0.5, label=self.legend)
+            plt.scatter(self.df[self.x_col], self.df[self.y_col], color=self.color, alpha=0.7, label=self.legend)
             if self.include_line_of_best_fit:
                 m, b = np.polyfit(self.df[self.x_col], self.df[self.y_col], 1)
                 plt.plot(self.df[self.x_col], m * self.df[self.x_col] + b, color='red', linestyle='--', label='Line of Best Fit')
@@ -117,13 +132,14 @@ class CSVVisualizer:
 
         elif self.chart_type == "pie":
             data_counts = self.df[self.x_col].value_counts()
-            plt.pie(data_counts, labels=data_counts.index, colors=plt.cm.Paired.colors, autopct='%1.1f%%')
+            plt.pie(data_counts, labels=data_counts.index, colors=[self.color], autopct='%1.1f%%')
 
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
         plt.title(self.title)
         plt.legend()
         plt.show()
+
 
     def preview(self, rows=5):
         """Display a preview of the data."""

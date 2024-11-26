@@ -119,7 +119,7 @@ function Signup({ onSignupSuccess }) {
           </Button>
 
           <Button variant="secondary" type="submit" className="mt-4 w-100" onClick={clickLogIn}>
-            Dont have an account?  Log in!
+            Have an account?  Log in!
           </Button>
 
         </Form>
