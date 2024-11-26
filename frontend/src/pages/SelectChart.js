@@ -16,12 +16,12 @@ function SelectChart() {
 
             <h2>Pairwise</h2>
             <div className='grid-container-select'>
-                <div className='grid-item-select'>
+               {/*} <div className='grid-item-select'>
                     <h6>Plot</h6>
                     <Link to={`/plot/${fileId}`}>
                         <img alt='A line plot' src='/Placeholder.png' />
                     </Link>
-                </div>
+                </div>*/}
                 <div className='grid-item-select'>
                     <h6>Scatter</h6>
                     <Link to={`/scatter/${fileId}`}>
