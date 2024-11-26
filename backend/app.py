@@ -146,19 +146,25 @@ def generate_chart():
     file_id = payload["Id"]
     chart_type = payload["chartType"]
     x_col = payload["x_col"]
-    amt_var = payload["var_amt"]
+    y_col = payload.get("y_col")
+    x_label = payload.get("x_label", x_col)
+    y_label = payload.get("y_label", y_col)
+    graph_color = payload.get("color", "#000000")  # Default color
+    graph_title = payload.get("title", "Scatter Plot")  # Default title
 
     file_path = file_registry.get(file_id)
+    if not file_path:
+        return jsonify({'error': 'File not found'}), 404
+
     visual = CSVVisualizer(file_path)
     visual.set_chart_type(chart_type)
-    if amt_var == '1':
-        visual.select_columns(x_col)
-    else:
-        visual.select_columns(x_col, payload["y_col"])
+    visual.select_columns(x_col, y_col)
+    visual.set_labels(x_label=x_label, y_label=y_label, title=graph_title, legend="")  # Set custom title
+    visual.set_color(graph_color)
 
     visual.plot()
 
-    chart_path = os.path.join("charts", f"{file_id}.png")
+    chart_path = os.path.join(charts_dir, f"{file_id}.png")
     plt.savefig(chart_path)
     plt.close()
 
@@ -167,6 +173,7 @@ def generate_chart():
         json.dump(chart_registry, f)
 
     return jsonify({'fileId': file_id}), 200
+
 
 @app.route('/api/chart/<file_id>', methods=['GET'])
 def get_chart(file_id):
