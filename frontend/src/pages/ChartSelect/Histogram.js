@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, Button } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Button, TextField } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import "./OneVarDistribution.css";
 import { useNavigate } from 'react-router-dom';
+import "./OneVarDistribution.css";
 
 function Histogram() {
   const { fileId } = useParams(); // Get fileId from URL
   const [columns, setColumns] = useState([]); // State to store column names
   const [dropdown1, setDropdown1] = useState(''); // State for selected variable
-  const [toggle1, setToggle1] = useState(false);
-  const [toggle2, setToggle2] = useState(false);
-  const [toggle3, setToggle3] = useState(false);
+  const [xLabel, setXLabel] = useState(''); // Custom X-axis label
+  const [graphTitle, setGraphTitle] = useState(''); // Custom graph title
+  const [graphColor, setGraphColor] = useState('#000000'); // Default color: black
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,24 +26,18 @@ function Histogram() {
       });
   }, [fileId]);
 
-  // Handlers for dropdowns
   const handleDropdown1Change = (event) => setDropdown1(event.target.value);
-
-  // Handlers for toggles
-  const handleToggle1Change = (event) => setToggle1(event.target.checked);
-  const handleToggle2Change = (event) => setToggle2(event.target.checked);
-  const handleToggle3Change = (event) => setToggle3(event.target.checked);
 
   const handleSubmit = () => {
     // Prepare data to send to the backend
     const payload = {
-      Id : fileId,
-      var_amt : '1',
+      Id: fileId,
+      var_amt: '1',
       chartType: "histogram",
       x_col: dropdown1,
-      displayAxisNames: toggle1,
-      displayTitle: toggle2,
-      generateStatistics: toggle3,
+      x_label: xLabel, // Include custom X-axis label
+      title: graphTitle, // Include custom graph title
+      color: graphColor, // Include custom graph color
     };
 
     axios.post(`http://localhost:5000/api/chart`, payload)
@@ -54,48 +48,70 @@ function Histogram() {
       .catch(error => {
         console.error("Error generating chart:", error);
       });
-  }
+  };
 
   return (
     <div className="plot">
       <Navbar />
       <div className='grid-container-svardist'>
 
+        {/* Title */}
         <h3 className="grid-item-1-svardist">Histogram</h3>
 
+        {/* Tracked Variable Dropdown */}
         <FormControl fullWidth margin="normal" className="grid-item-2-svardist">
-            <InputLabel>Tracked Variable</InputLabel>
-            <Select value={dropdown1} onChange={handleDropdown1Change}>
-              {columns.map((col, index) => (
-                <MenuItem key={index} value={col}>{col}</MenuItem>
-              ))}
-            </Select>
+          <InputLabel>Tracked Variable</InputLabel>
+          <Select value={dropdown1} onChange={handleDropdown1Change}>
+            {columns.map((col, index) => (
+              <MenuItem key={index} value={col}>{col}</MenuItem>
+            ))}
+          </Select>
         </FormControl>
-        
-        <div className='grid-item-3-svardist'>
-            <FormControlLabel
-                control={<Switch checked={toggle1} onChange={handleToggle1Change} />}
-                label="Display Axis Names"
-            />
-            <FormControlLabel
-                control={<Switch checked={toggle2} onChange={handleToggle2Change} />}
-                label="Display Title"
-            />
-            <FormControlLabel
-                control={<Switch checked={toggle3} onChange={handleToggle3Change} />}
-                label="Generate Statistics"
-            />
+
+        {/* Custom Graph Title */}
+        <TextField
+          label="Graph Title"
+          value={graphTitle}
+          onChange={(e) => setGraphTitle(e.target.value)}
+          fullWidth
+          margin="normal"
+          className="grid-item-4-svardist"
+        />
+
+        {/* Custom X-Axis Label */}
+        <TextField
+          label="Label"
+          value={xLabel}
+          onChange={(e) => setXLabel(e.target.value)}
+          fullWidth
+          margin="normal"
+          className="grid-item-3-svardist"
+        />
+
+        {/* Color Picker */}
+        <div className="grid-item-5-svardist">
+          <label htmlFor="colorPicker" style={{ marginRight: "1rem" }}>
+            Choose Graph Color:
+          </label>
+          <input
+            type="color"
+            id="colorPicker"
+            value={graphColor}
+            onChange={(e) => setGraphColor(e.target.value)}
+            style={{ cursor: "pointer", width: "50px", height: "30px", border: "none" }}
+          />
         </div>
 
-        <Button 
-          variant="contained" 
-          color="primary" 
-          style={{ marginTop: '1rem' }} 
-          className="grid-item-5"
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
+        {/* Submit Button */}
+        <div className="grid-item-6-svardist">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </div>
 
       </div>
     </div>
