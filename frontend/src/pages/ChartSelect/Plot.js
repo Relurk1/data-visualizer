@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, Button } from '@mui/material';
+import { Container, FormControl, InputLabel, Select, MenuItem, Button, TextField } from '@mui/material';
 import Navbar from '../../components/Navbar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -11,9 +11,9 @@ function Plot() {
   const [columns, setColumns] = useState([]); // State to store column names
   const [dropdown1, setDropdown1] = useState(''); // State for selected independent variable
   const [dropdown2, setDropdown2] = useState(''); // State for selected dependent variable
-  const [toggle1, setToggle1] = useState(false);
-  const [toggle2, setToggle2] = useState(false);
-  const [toggle3, setToggle3] = useState(false);
+  const [xLabel, setXLabel] = useState(''); // Custom x-axis label
+  const [yLabel, setYLabel] = useState(''); // Custom y-axis label
+  const [graphColor, setGraphColor] = useState('#000000'); // Default color: black
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,90 +27,108 @@ function Plot() {
       });
   }, [fileId]);
 
-  // Handlers for dropdowns
   const handleDropdown1Change = (event) => setDropdown1(event.target.value);
   const handleDropdown2Change = (event) => setDropdown2(event.target.value);
 
-  // Handlers for toggles
-  const handleToggle1Change = (event) => setToggle1(event.target.checked);
-  const handleToggle2Change = (event) => setToggle2(event.target.checked);
-  const handleToggle3Change = (event) => setToggle3(event.target.checked);
-
   const handleSubmit = () => {
-    // Prepare data to send to the backend
     const payload = {
-      Id : fileId,
-      var_amt : '2',
+      Id: fileId,
+      var_amt: '2',
       chartType: "plot",
       x_col: dropdown1,
       y_col: dropdown2,
-      displayAxisNames: toggle1,
-      displayTitle: toggle2,
-      generateStatistics: toggle3,
+      x_label: xLabel,
+      y_label: yLabel,
+      color: graphColor, // Pass the selected graph color
     };
-
+  
     axios.post(`http://localhost:5000/api/chart`, payload)
       .then(response => {
-        // Navigate to the ViewChart component with the chart ID
         navigate(`/view_chart/${fileId}`);
       })
       .catch(error => {
         console.error("Error generating chart:", error);
       });
-  }
+  };
+  
+  
 
   return (
-    <div className="plot">
-      <Navbar />
-      <div className='grid-container'>
+<div className="plot">
+  <Navbar />
+  <div className="grid-container">
+    {/* Title */}
+    <h3 className="grid-item-1">Plot</h3>
 
-        <h3 className="grid-item-1">Plot</h3>
+    {/* Independent Variable Dropdown */}
+    <FormControl fullWidth margin="normal" className="grid-item-2">
+      <InputLabel>Independent Variable</InputLabel>
+      <Select value={dropdown1} onChange={handleDropdown1Change}>
+        {columns.map((col, index) => (
+          <MenuItem key={index} value={col}>
+            {col}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
 
-        <FormControl fullWidth margin="normal" className="grid-item-2">
-            <InputLabel>Independent Variable</InputLabel>
-            <Select value={dropdown1} onChange={handleDropdown1Change}>
-              {columns.map((col, index) => (
-                <MenuItem key={index} value={col}>{col}</MenuItem>
-              ))}
-            </Select>
-        </FormControl>
-        
-        <FormControl fullWidth margin="normal" className="grid-item-3">
-            <InputLabel>Dependent Variable</InputLabel>
-            <Select value={dropdown2} onChange={handleDropdown2Change}>
-              {columns.map((col, index) => (
-                <MenuItem key={index} value={col}>{col}</MenuItem>
-              ))}
-            </Select>
-        </FormControl>
+    {/* Dependent Variable Dropdown */}
+    <FormControl fullWidth margin="normal" className="grid-item-3">
+      <InputLabel>Dependent Variable</InputLabel>
+      <Select value={dropdown2} onChange={handleDropdown2Change}>
+        {columns.map((col, index) => (
+          <MenuItem key={index} value={col}>
+            {col}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
 
-        <div className='grid-item-4'>
-            <FormControlLabel
-                control={<Switch checked={toggle1} onChange={handleToggle1Change} />}
-                label="Display Axis Names"
-            />
-            <FormControlLabel
-                control={<Switch checked={toggle2} onChange={handleToggle2Change} />}
-                label="Display Title"
-            />
-            <FormControlLabel
-                control={<Switch checked={toggle3} onChange={handleToggle3Change} />}
-                label="Generate Statistics"
-            />
-        </div>
+    {/* X and Y Axis Labels */}
+    <TextField
+      label="X-Axis Label"
+      value={xLabel}
+      onChange={(e) => setXLabel(e.target.value)}
+      fullWidth
+      margin="normal"
+      className="grid-item-4"
+    />
+    <TextField
+      label="Y-Axis Label"
+      value={yLabel}
+      onChange={(e) => setYLabel(e.target.value)}
+      fullWidth
+      margin="normal"
+      className="grid-item-4"
+    />
 
-        <Button 
-          variant="contained" 
-          color="primary" 
-          style={{ marginTop: '1rem' }} 
-          className="grid-item-5"
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
-
-      </div>
+    <div className="grid-item-6">
+      <label htmlFor="colorPicker" style={{ marginRight: "1rem" }}>
+        Choose Graph Color:
+      </label>
+      <input
+        type="color"
+        id="colorPicker"
+        value={graphColor}
+        onChange={(e) => setGraphColor(e.target.value)}
+        style={{ cursor: "pointer", width: "50px", height: "30px", border: "none" }}
+      />
     </div>
+
+
+    {/* Submit Button */}
+    <div className="grid-item-5">
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+      >
+        Submit
+      </Button>
+    </div>
+  </div>
+</div>
+
   );
 }
 
