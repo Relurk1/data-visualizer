@@ -1,41 +1,54 @@
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 5rem; 
-    margin-left: 5rem;
-    margin-right: 6rem;
+    grid-template-columns: repeat(2, 1fr); /* Two columns for better alignment */
+    grid-template-rows: auto auto auto; /* Auto-adjusting rows */
+    grid-column-gap: 2rem; /* Space between columns */
+    grid-row-gap: 1.5rem; /* Space between rows */
+    margin: 2rem 5rem; /* Padding around the grid */
 }
 
-.grid-item-1 { 
-    width: 100%;
-    grid-column: 1 / span 3; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.grid-item-1 {
+    grid-column: 1 / span 2; /* Span across both columns */
+    text-align: center;
+    font-size: 2rem; /* Larger font size */
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
-.grid-item-2 { 
-    grid-area: 2 / 1 / 3 / 2;
-    margin-left: 4rem !important;
+.grid-item-2 {
+    grid-column: 1 / 2; /* First column */
 }
 
 .grid-item-3 {
-    grid-area: 2 / 3 / 3 / 4;
-    margin-right: 4rem !important;
+    grid-column: 2 / 3; /* Second column */
 }
 
-.grid-item-4 { 
-    grid-area: 3 / 1 / 4 / 4; 
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5rem;
+.grid-item-4 {
+    grid-column: 1 / span 2; /* Span across both columns */
 }
 
 .grid-item-5 {
-    grid-area: 4 / 2 / 5 / 3; 
-    width: 100%;
-} 
+    grid-column: 1 / span 2; /* Span across both columns */
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+button {
+    padding: 0.8rem 2rem; /* Improve button size */
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+input[type="color"] {
+    width: 50px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="color"]:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
