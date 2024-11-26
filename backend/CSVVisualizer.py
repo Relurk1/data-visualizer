@@ -72,6 +72,30 @@ class CSVVisualizer:
         
         return stats
 
+    def calculate_basic_statistics(self):
+    """Calculate and return basic statistics (count, mean, median, and range) for the X and Y columns."""
+    if not self.x_col:
+        raise ValueError("X column is not selected.")
+    
+    stats = {
+        "X Statistics": {
+            "count": self.df[self.x_col].count(),
+            "mean": self.df[self.x_col].mean(),
+            "median": self.df[self.x_col].median(),
+            "range": self.df[self.x_col].max() - self.df[self.x_col].min()
+        }
+    }
+
+    if self.y_col:
+        stats["Y Statistics"] = {
+            "count": self.df[self.y_col].count(),
+            "mean": self.df[self.y_col].mean(),
+            "median": self.df[self.y_col].median(),
+            "range": self.df[self.y_col].max() - self.df[self.y_col].min()
+        }
+    
+    return stats
+
     def plot(self):
         plt.figure(figsize=(8, 6))
 
