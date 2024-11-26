@@ -58,6 +58,20 @@ class CSVVisualizer:
         self.include_line_of_best_fit = include and self.chart_type == "scatter"
         return self
 
+    def calculate_statistics(self):
+        """Calculate and return statistics for the X and Y columns."""
+        if not self.x_col:
+            raise ValueError("X column is not selected.")
+        
+        stats = {
+            "X Statistics": self.df[self.x_col].describe().to_dict()
+        }
+
+        if self.y_col:
+            stats["Y Statistics"] = self.df[self.y_col].describe().to_dict()
+        
+        return stats
+
     def plot(self):
         plt.figure(figsize=(8, 6))
 
@@ -66,7 +80,7 @@ class CSVVisualizer:
             if self.include_line_of_best_fit:
                 m, b = np.polyfit(self.df[self.x_col], self.df[self.y_col], 1)
                 plt.plot(self.df[self.x_col], m * self.df[self.x_col] + b, color='red', linestyle='--', label='Line of Best Fit')
-                oo
+
         elif self.chart_type == "bar":
             plt.bar(self.df[self.x_col], self.df[self.y_col], color=self.color, label=self.legend)
 
@@ -80,12 +94,12 @@ class CSVVisualizer:
         elif self.chart_type == "pie":
             data_counts = self.df[self.x_col].value_counts()
             plt.pie(data_counts, labels=data_counts.index, colors=plt.cm.Paired.colors, autopct='%1.1f%%')
-        
+
         plt.xlabel(self.x_label)
         plt.ylabel(self.y_label)
         plt.title(self.title)
         plt.legend()
-        # plt.show()
+        plt.show()
 
     def preview(self, rows=5):
         """Display a preview of the data."""
