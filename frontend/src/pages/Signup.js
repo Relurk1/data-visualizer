@@ -61,6 +61,9 @@ function Signup({ onSignupSuccess }) {
     }
   };
 
+  const clickLogIn = () => {
+    navigate("/login")
+  }
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="w-50 p-3 border bg-white rounded">
@@ -114,6 +117,11 @@ function Signup({ onSignupSuccess }) {
           <Button variant="success" type="submit" className="mt-4 w-100">
             Sign Up
           </Button>
+
+          <Button variant="secondary" type="submit" className="mt-4 w-100" onClick={clickLogIn}>
+            Dont have an account?  Log in!
+          </Button>
+
         </Form>
       </div>
     </div>
