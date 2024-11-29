@@ -1,12 +1,13 @@
+"""This module contains the unit tests for the project"""
 import unittest
 import io
 import os
 from app import app
 
 class FlaskTestCase(unittest.TestCase):
-    
+    """This class contains all the relevant unit tests for the project"""
     def setUp(self):
-        # Set up a test client and configure the app for testing
+        """Set up a test client and configure the app for testing"""
         app.config['TESTING'] = True
         app.config['UPLOAD_FOLDER'] = 'test_uploads'  # use a different folder for tests
         self.client = app.test_client()
@@ -16,7 +17,7 @@ class FlaskTestCase(unittest.TestCase):
             os.makedirs(app.config['UPLOAD_FOLDER'])
 
     def tearDown(self):
-        # Clean up by removing the test upload folder and its contents
+        """Clean up by removing the test upload folder and its contents"""
         if os.path.exists(app.config['UPLOAD_FOLDER']):
             for filename in os.listdir(app.config['UPLOAD_FOLDER']):
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -25,13 +26,13 @@ class FlaskTestCase(unittest.TestCase):
             os.rmdir(app.config['UPLOAD_FOLDER'])
 
     def test_upload_no_file(self):
-        # Test case where no file is uploaded
+        """Test case where no file is uploaded"""
         response = self.client.post('/upload', content_type='multipart/form-data')
         self.assertEqual(response.status_code, 400)
         self.assertIn(b'No file part', response.data)
 
     def test_upload_empty_filename(self):
-        # Test case where a file is uploaded but with an empty filename
+        """Test case where a file is uploaded but with an empty filename"""
         data = {
             'file': (io.BytesIO(b"dummy data"), '')
         }
@@ -40,7 +41,7 @@ class FlaskTestCase(unittest.TestCase):
         self.assertIn(b'No selected file', response.data)
 
     def test_upload_valid_file(self):
-        # Test case where a valid CSV file is uploaded
+        """Test case where a valid CSV file is uploaded"""
         csv_data = "name,age\nJohn,30\nDoe,22"
         data = {
             'file': (io.BytesIO(csv_data.encode('utf-8')), 'test.csv')
@@ -58,12 +59,13 @@ class FlaskTestCase(unittest.TestCase):
         self.assertEqual(json_data['head'][1], {'name': 'Doe', 'age': 22})
 
     def test_invalid_file_type(self):
-        # Test case where a non-CSV file is uploaded
+        """Test case where a non-CSV file is uploaded"""
         data = {
             'file': (io.BytesIO(b"this is not a csv file"), 'test.txt')
         }
-        response = self.client.post('/upload', data=data, content_type='multipart/form-data')
-        self.assertEqual(response.status_code, 500)  # This should trigger an error while reading as a CSV
+        response = self.client.post('/upload', data=data,
+        content_type='multipart/form-data')
+        self.assertEqual(response.status_code, 500)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,10 +1,31 @@
+"""This module contains the CSVVisualizer class."""
+
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
+matplotlib.use('Agg')
+
 class CSVVisualizer:
+    """This class is responsible for parsing the csv and generating visualizations from that csv.
+
+    The class contains the following data members:
+        +file_path - a string containg the path to the csv file
+        +df - a data structure that stores the csv data for easier manipulation
+        +columns = a list of all the column heading in the csv
+        +x_col, y_col - the specific columns that are being tracked for the particular chart
+        +chart_type - a string that specifies the type of chart being generated
+        +color - a string that specifies the color used for the visualization
+        +x_label, y_label - strings representing the axis titles
+        +title, legend - strings that contain meta-information about the chart
+        +include_line_of_best_fit - a boolean that represents whether or not a line of best fit 
+        should be generated for the scatter plot chart
+
+    In addition to these data members, there are methods that set each of the specified 
+    data members, a method to glean statistical data from the csv, and a method that 
+    actually generates the chart 
+    """
     def __init__(self, file_path):
         self.file_path = file_path
         self.df = pd.read_csv(file_path)  # Load CSV directly on initialization
@@ -52,6 +73,7 @@ class CSVVisualizer:
         return self
 
     def get_columns(self):
+        """Get the columns from the csv."""
         return self.columns
 
     def add_line_of_best_fit(self, include=True):
@@ -63,21 +85,20 @@ class CSVVisualizer:
         """Calculate and return statistics for the X and Y columns."""
         if not self.x_col:
             raise ValueError("X column is not selected.")
-        
         stats = {
             "X Statistics": self.df[self.x_col].describe().to_dict()
         }
 
         if self.y_col:
             stats["Y Statistics"] = self.df[self.y_col].describe().to_dict()
-        
         return stats
 
     def calculate_basic_statistics(self):
-        """Calculate and return basic statistics (count, mean, median, and range) for the X and Y columns."""
+        """Calculate and return basic statistics 
+        (count, mean, median, and range) for the X and Y columns.
+        """
         if not self.x_col:
             raise ValueError("X column is not selected.")
-    
         stats = {
             "X Statistics": {
                 "count": self.df[self.x_col].count(),
@@ -94,31 +115,19 @@ class CSVVisualizer:
                 "median": self.df[self.y_col].median(),
                 "range": self.df[self.y_col].max() - self.df[self.y_col].min()
             }
-        
         return stats
-    
-    def set_color(self, color):
-        """Set the color of the graph."""
-        self.color = color
-        return self
-    
-    
-    def set_labels(self, x_label, y_label, title, legend):
-        self.x_label = x_label or self.x_col
-        self.y_label = y_label or self.y_col
-        self.title = title
-        self.legend = legend
-        return self
-
 
     def plot(self):
+        """Generate the plot based on the specified parameters and save it to disk"""
         plt.figure(figsize=(8, 6))
 
         if self.chart_type == "scatter":
-            plt.scatter(self.df[self.x_col], self.df[self.y_col], color=self.color, alpha=0.7, label=self.legend)
+            plt.scatter(self.df[self.x_col], self.df[self.y_col],
+            color=self.color, alpha=0.7, label=self.legend)
             if self.include_line_of_best_fit:
                 m, b = np.polyfit(self.df[self.x_col], self.df[self.y_col], 1)
-                plt.plot(self.df[self.x_col], m * self.df[self.x_col] + b, color='red', linestyle='--', label='Line of Best Fit')
+                plt.plot(self.df[self.x_col], m * self.df[self.x_col] + b,
+                color='red', linestyle='--', label='Line of Best Fit')
 
         elif self.chart_type == "bar":
             plt.bar(self.df[self.x_col], self.df[self.y_col], color=self.color, label=self.legend)
@@ -127,7 +136,7 @@ class CSVVisualizer:
             plt.hist(self.df[self.x_col], bins=30, color=self.color, alpha=0.7, label=self.legend)
 
         elif self.chart_type == "box":
-            plt.boxplot(self.df[self.x_col], patch_artist=True, boxprops=dict(facecolor=self.color))
+            plt.boxplot(self.df[self.x_col], patch_artist=True, boxprops={"facecolor": self.color})
             plt.xticks([1], [self.x_col])
 
         elif self.chart_type == "pie":

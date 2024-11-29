@@ -1,13 +1,13 @@
-from flask import Flask, jsonify, request, send_file
+"""This module manages user auth and communication with the frontend"""
 import os
-import pandas as pd
 import uuid
-from flask_cors import CORS
-import matplotlib.pyplot as plt
-from CSVVisualizer import CSVVisualizer
 import json
 import sqlite3
 import bcrypt
+from flask import Flask, jsonify, request, send_file
+from flask_cors import CORS
+import matplotlib.pyplot as plt
+from backend.csv_visualizer import CSVVisualizer
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +21,7 @@ chart_registry = {}
 DATABASE = 'app.db'
 
 def init_db():
+    """Initializes the sqlite database"""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('''
@@ -38,6 +39,7 @@ init_db()
 
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
+    """Handles user signup requests"""
     data = request.json
     name = data.get('name')
     email = data.get('email')
@@ -61,6 +63,7 @@ def signup():
 
 @app.route('/api/auth/login', methods=['POST'])
 def login():
+    """Handles user login requests"""
     data = request.json
     email = data.get('email')
     password = data.get('password')
@@ -77,17 +80,14 @@ def login():
     if user:
         user_id, name, hashed_password = user
         if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            return jsonify({'message': 'Login successful', 'user': {'id': user_id, 'name': name, 'email': email}}), 200
-        else:
-            return jsonify({'error': 'Invalid password'}), 401
-    else:
-        return jsonify({'error': 'User not found'}), 404
+            return jsonify({'message': 'Login successful',
+            'user': {'id': user_id, 'name': name, 'email': email}}), 200
+        return jsonify({'error': 'Invalid password'}), 401
+    return jsonify({'error': 'User not found'}), 404
 
 @app.route('/api/auth/profile/<int:user_id>', methods=['GET'])
 def profile(user_id):
-    """
-    Fetches user profile details based on user ID.
-    """
+    """Fetches user profile details based on user ID."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('SELECT id, name, email FROM users WHERE id = ?', (user_id,))
@@ -97,11 +97,11 @@ def profile(user_id):
     if user:
         user_id, name, email = user
         return jsonify({'id': user_id, 'name': name, 'email': email}), 200
-    else:
-        return jsonify({'error': 'User not found'}), 404
+    return jsonify({'error': 'User not found'}), 404
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
+    """Handles files being imported from the frontend"""
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
 
@@ -114,7 +114,7 @@ def upload_file():
     file.save(file_path)
     visual = CSVVisualizer(file_path)
     file_registry[file_id] = file_path
-    with open("file_registry.json", "w") as f:
+    with open("file_registry.json", "w", encoding="utf-8") as f:
         json.dump({file_id: file_path for file_id, visual in file_registry.items()}, f)
     print(file_registry)
 
@@ -122,10 +122,11 @@ def upload_file():
 
 @app.route('/api/columns/<file_id>', methods=['GET'])
 def get_columns(file_id):
-    with open("file_registry.json", "r") as f:
-        file_registry = json.load(f)
+    """Returns columns from the csv file"""
+    with open("file_registry.json", "r", encoding="utf-8") as f:
+        f_registry = json.load(f)
 
-    file_path = file_registry.get(file_id)
+    file_path = f_registry.get(file_id)
     visual = CSVVisualizer(file_path)
     if not visual:
         return jsonify({'error': 'File not found'}), 404
@@ -135,12 +136,13 @@ def get_columns(file_id):
 
 @app.route('/api/chart', methods=['POST'])
 def generate_chart():
+    """generates charts and returns their filepath"""
     charts_dir = "charts"
     if not os.path.exists(charts_dir):
         os.makedirs(charts_dir)
 
-    with open("file_registry.json", "r") as f:
-        file_registry = json.load(f)
+    with open("file_registry.json", "r", encoding="utf-8") as f:
+        f_registry = json.load(f)
 
     payload = request.json
     file_id = payload["Id"]
@@ -152,14 +154,15 @@ def generate_chart():
     graph_color = payload.get("color", "#000000")  # Default color
     graph_title = payload.get("title", "Scatter Plot")  # Default title
 
-    file_path = file_registry.get(file_id)
+    file_path = f_registry.get(file_id)
     if not file_path:
         return jsonify({'error': 'File not found'}), 404
 
     visual = CSVVisualizer(file_path)
     visual.set_chart_type(chart_type)
     visual.select_columns(x_col, y_col)
-    visual.set_labels(x_label=x_label, y_label=y_label, title=graph_title, legend="")  # Set custom title
+    visual.set_labels(x_label=x_label, y_label=y_label,
+                      title=graph_title, legend="")  # Set custom title
     visual.set_color(graph_color)
 
     visual.plot()
@@ -169,7 +172,7 @@ def generate_chart():
     plt.close()
 
     chart_registry[file_id] = chart_path
-    with open("chart_registry.json", "w") as f:
+    with open("chart_registry.json", "w", encoding="utf-8") as f:
         json.dump(chart_registry, f)
 
     return jsonify({'fileId': file_id}), 200
@@ -177,10 +180,11 @@ def generate_chart():
 
 @app.route('/api/chart/<file_id>', methods=['GET'])
 def get_chart(file_id):
-    with open("chart_registry.json", "r") as f:
-        chart_registry = json.load(f)
+    """retreives charts upon user requests"""
+    with open("chart_registry.json", "r", encoding="utf-8") as f:
+        c_registry = json.load(f)
 
-    chart_path = chart_registry.get(file_id)
+    chart_path = c_registry.get(file_id)
     print("Requested file_id:", file_id)
     print("Found chart path:", chart_path)
 
