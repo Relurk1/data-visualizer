@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import "./FileUpload.css";
 
 function UploadPage() {
   const [file, setFile] = useState(null);
@@ -27,9 +28,9 @@ function UploadPage() {
 
   return (
     <div>
-      <h2>Upload CSV File</h2>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
+      {/* <h2>Upload CSV File</h2> */}
+      <input type="file" onChange={handleFileChange} className='select-file'/>
+      <button onClick={handleUpload} className='upload'>Upload</button>
     </div>
   );
 }

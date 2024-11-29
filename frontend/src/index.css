@@ -1,7 +1,9 @@
 :root {
   --background-color: #fff;
   --text-color: #000;
-  --font-family: 'Roboto'
+  --font-family: 'Roboto';
+  --theme-color: #1f77b4;
+  --theme-color-secondary: #1a6499;
 }
 
 body {
