@@ -130,6 +130,12 @@ function ScatterPlot() {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            sx={{
+              backgroundColor: "var(--theme-color)",
+              "&:hover": {
+                backgroundColor: "var(--theme-color-secondary)",
+              },
+            }}
           >
             Submit
           </Button>

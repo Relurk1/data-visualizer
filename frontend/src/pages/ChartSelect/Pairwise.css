@@ -34,6 +34,17 @@
     margin-top: 2rem;
 }
 
+.grid-item-6 {
+    grid-column: 1 / span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-item-7 {
+    grid-column: 1 / span 2;
+}
+
 button {
     padding: 0.8rem 2rem; /* Improve button size */
     font-size: 1rem;

@@ -83,6 +83,16 @@ function BarChart() {
           </Select>
         </FormControl>
 
+        {/* Custom Graph Title */}
+        <TextField
+          label="Graph Title"
+          value={graphTitle}
+          onChange={(e) => setGraphTitle(e.target.value)}
+          fullWidth
+          margin="normal"
+          className="grid-item-7"
+        />
+
         {/* Custom Axis Labels */}
         <TextField
           label="X-Axis Label"
@@ -99,16 +109,6 @@ function BarChart() {
           fullWidth
           margin="normal"
           className="grid-item-4"
-        />
-
-        {/* Custom Graph Title */}
-        <TextField
-          label="Graph Title"
-          value={graphTitle}
-          onChange={(e) => setGraphTitle(e.target.value)}
-          fullWidth
-          margin="normal"
-          className="grid-item-7"
         />
 
         {/* Color Picker */}
@@ -131,6 +131,12 @@ function BarChart() {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            sx={{
+              backgroundColor: "var(--theme-color)",
+              "&:hover": {
+                backgroundColor: "var(--theme-color-secondary)",
+              },
+            }}
           >
             Submit
           </Button>
