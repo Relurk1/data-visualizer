@@ -1,12 +1,14 @@
 .upload {
-    background-color: var(--theme-color);
-    padding: 10px 20px;
-    border: none;
+    background-color: white;
+    color: var(--theme-color) !important;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--theme-color);
     border-radius: 5px;
 }
 
 .upload:hover {
-    background-color: var(--theme-color-secondary); /* Darker green on hover */
+    color: white !important;
+    background-color: var(--theme-color); /* Darker green on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
 }
   

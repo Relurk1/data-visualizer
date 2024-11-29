@@ -114,11 +114,15 @@ function Signup({ onSignupSuccess }) {
             />
           </Form.Group>
 
-          <Button variant="success" type="submit" className="mt-4 w-100">
+          <Button variant="success" type="submit" className="mt-4 w-100" style={{backgroundColor: "var(--theme-color)"}}>
             Sign Up
           </Button>
 
-          <Button variant="secondary" type="submit" className="mt-4 w-100" onClick={clickLogIn}>
+          <Button variant="secondary" type="submit" className="mt-4 w-100" onClick={clickLogIn} style={{
+            backgroundColor: "white",
+            borderColor: "var(--theme-color)",
+            color: "var(--theme-color)"
+          }}>
             Have an account?  Log in!
           </Button>
 
