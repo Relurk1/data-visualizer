@@ -53,3 +53,10 @@
     align-items: center;
     margin-top: 1rem; /* Add some space above the button */
 }
+
+.grid-item-6-svardist {
+    grid-column: 1 / span 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

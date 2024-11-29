@@ -59,9 +59,9 @@ function Box() {
         <h3 className="grid-item-1-svardist">Box Plot</h3>
 
         {/* Tracked Variable Dropdown */}
-        <FormControl fullWidth margin="normal" className="grid-item-2-svardist">
+        <FormControl fullWidth margin="normal" className="grid-item-2-svardist" sx={{width: "100%",}}>
           <InputLabel>Tracked Variable</InputLabel>
-          <Select value={dropdown1} onChange={handleDropdown1Change}>
+          <Select value={dropdown1} onChange={handleDropdown1Change} sx={{width: "100%", textAlign: "center",}}>
             {columns.map((col, index) => (
               <MenuItem key={index} value={col}>{col}</MenuItem>
             ))}
@@ -109,6 +109,12 @@ function Box() {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            sx={{
+              backgroundColor: "var(--theme-color)",
+              "&:hover": {
+                backgroundColor: "var(--theme-color-secondary)",
+              },
+            }}
           >
             Submit
           </Button>
