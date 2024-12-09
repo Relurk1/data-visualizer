@@ -8,9 +8,13 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import matplotlib.pyplot as plt
 from csv_visualizer import CSVVisualizer
+import jwt
+from functools import wraps
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app)
+
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -19,6 +23,7 @@ file_registry = {}
 chart_registry = {}
 
 DATABASE = 'app.db'
+JWT_SECRET = "secure_jwt_secret"
 
 def init_db():
     """Initializes the sqlite database"""
@@ -36,6 +41,21 @@ def init_db():
     conn.close()
 
 init_db()
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+        try:
+            token = token.split(" ")[1]
+            data = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+            current_user_id = data['id']
+        except Exception as e:
+            return jsonify({'message': 'Token is invalid!'}), 403
+        return f(current_user_id, *args, **kwargs)
+    return decorated
 
 @app.route('/api/auth/signup', methods=['POST'])
 def signup():
@@ -80,17 +100,26 @@ def login():
     if user:
         user_id, name, hashed_password = user
         if bcrypt.checkpw(password.encode('utf-8'), hashed_password):
-            return jsonify({'message': 'Login successful',
-            'user': {'id': user_id, 'name': name, 'email': email}}), 200
-        return jsonify({'error': 'Invalid password'}), 401
-    return jsonify({'error': 'User not found'}), 404
+            token = jwt.encode(
+                {'id': user_id, 'exp': datetime.utcnow() + timedelta(hours=1)},
+                JWT_SECRET,
+                algorithm="HS256"
+            )
+            return jsonify({'message': 'Login successful', 'token': token, 'user': {'id': user_id, 'name': name, 'email': email}}), 200
+        else:
+            return jsonify({'error': 'Invalid password'}), 401
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
-@app.route('/api/auth/profile/<int:user_id>', methods=['GET'])
-def profile(user_id):
-    """Fetches user profile details based on user ID."""
+@app.route('/api/auth/profile', methods=['GET'])
+@token_required
+def profile(current_user_id):
+    """
+    Fetches user profile details using the token.
+    """
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute('SELECT id, name, email FROM users WHERE id = ?', (user_id,))
+    cursor.execute('SELECT id, name, email FROM users WHERE id = ?', (current_user_id,))
     user = cursor.fetchone()
     conn.close()
 
@@ -151,8 +180,8 @@ def generate_chart():
     y_col = payload.get("y_col")
     x_label = payload.get("x_label", x_col)
     y_label = payload.get("y_label", y_col)
-    graph_color = payload.get("color", "#000000")  # Default color
-    graph_title = payload.get("title", "Scatter Plot")  # Default title
+    graph_color = payload.get("color", "#000000")
+    graph_title = payload.get("title", "Scatter Plot")
 
     file_path = f_registry.get(file_id)
     if not file_path:
@@ -162,7 +191,7 @@ def generate_chart():
     visual.set_chart_type(chart_type)
     visual.select_columns(x_col, y_col)
     visual.set_labels(x_label=x_label, y_label=y_label,
-                      title=graph_title, legend="")  # Set custom title
+                      title=graph_title, legend="") 
     visual.set_color(graph_color)
 
     visual.plot()
@@ -176,7 +205,6 @@ def generate_chart():
         json.dump(chart_registry, f)
 
     return jsonify({'fileId': file_id}), 200
-
 
 @app.route('/api/chart/<file_id>', methods=['GET'])
 def get_chart(file_id):
@@ -193,6 +221,54 @@ def get_chart(file_id):
 
     return send_file(chart_path, mimetype='image/png')
 
+@app.route('/api/chart/save', methods=['POST'])
+@token_required
+def save_chart(current_user_id):
+    """
+    Saves a chart reference for the logged-in user.
+    """
+    data = request.json
+    file_id = data.get('fileId')
+    chart_url = data.get('chartUrl')
+
+    if not all([file_id, chart_url]):
+        return jsonify({'error': 'File ID and Chart URL are required'}), 400
+
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS saved_charts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                file_id TEXT NOT NULL,
+                chart_url TEXT NOT NULL,
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            )
+        ''')
+        cursor.execute('INSERT INTO saved_charts (user_id, file_id, chart_url) VALUES (?, ?, ?)',
+                       (current_user_id, file_id, chart_url))
+        conn.commit()
+        conn.close()
+        return jsonify({'message': 'Chart saved successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/chart/saved', methods=['GET'])
+@token_required
+def get_saved_charts(current_user_id):
+    """
+    Retrieves saved charts for the logged-in user.
+    """
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute('SELECT file_id, chart_url FROM saved_charts WHERE user_id = ?', (current_user_id,))
+        charts = cursor.fetchall()
+        conn.close()
+        return jsonify({'charts': [{'fileId': file_id, 'chartUrl': chart_url} for file_id, chart_url in charts]}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
