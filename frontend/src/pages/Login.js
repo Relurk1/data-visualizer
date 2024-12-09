@@ -11,7 +11,7 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('http://127.0.0.1:5000/api/auth/login', {
         method: 'POST',
@@ -20,20 +20,15 @@ function Login({ onLoginSuccess }) {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
-
       if (response.ok) {
         setMessage('Login successful! Redirecting to your profile...');
         setMessageType('success');
-
-        const user = { id: data.user.id, name: data.user.name, email: data.user.email };
-        localStorage.setItem('user', JSON.stringify(user));
-
-        if (onLoginSuccess) {
-          onLoginSuccess(user);
-        }
-
+  
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+  
         setTimeout(() => {
           navigate('/profile');
         }, 1500);
@@ -46,6 +41,7 @@ function Login({ onLoginSuccess }) {
       setMessageType('danger');
     }
   };
+  
 
   const clickSignUp = () => {
     navigate('/Signup')
