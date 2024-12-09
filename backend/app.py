@@ -7,7 +7,7 @@ import bcrypt
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import matplotlib.pyplot as plt
-from backend.csv_visualizer import CSVVisualizer
+from csv_visualizer import CSVVisualizer
 
 app = Flask(__name__)
 CORS(app)
