@@ -11,6 +11,7 @@ function Histogram() {
   const [columns, setColumns] = useState([]); // State to store column names
   const [dropdown1, setDropdown1] = useState(''); // State for selected variable
   const [xLabel, setXLabel] = useState(''); // Custom X-axis label
+  const [yLabel, setYLabel] = useState(''); // Custom y-axis label
   const [graphTitle, setGraphTitle] = useState(''); // Custom graph title
   const [graphColor, setGraphColor] = useState('#000000'); // Default color: black
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ function Histogram() {
   }, [fileId]);
 
   const handleDropdown1Change = (event) => setDropdown1(event.target.value);
-
   const handleSubmit = () => {
     // Prepare data to send to the backend
     const payload = {
@@ -36,6 +36,7 @@ function Histogram() {
       chartType: "histogram",
       x_col: dropdown1,
       x_label: xLabel, // Include custom X-axis label
+      y_label: yLabel, // Include custom X-axis label
       title: graphTitle, // Include custom graph title
       color: graphColor, // Include custom graph color
     };
@@ -68,6 +69,7 @@ function Histogram() {
           </Select>
         </FormControl>
 
+
         {/* Custom Graph Title */}
         <TextField
           label="Graph Title"
@@ -80,9 +82,17 @@ function Histogram() {
 
         {/* Custom X-Axis Label */}
         <TextField
-          label="Label"
+          label="X-Axis Label"
           value={xLabel}
           onChange={(e) => setXLabel(e.target.value)}
+          fullWidth
+          margin="normal"
+          className="grid-item-3-svardist"
+        />
+        <TextField
+          label="Y-Axis Label"
+          value={yLabel}
+          onChange={(e) => setYLabel(e.target.value)}
           fullWidth
           margin="normal"
           className="grid-item-3-svardist"
