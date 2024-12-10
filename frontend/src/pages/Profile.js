@@ -17,7 +17,7 @@ function Profile() {
       return;
     }
 
-    const fetchData = async () => {
+    const fetchProfileAndCharts = async () => {
       try {
         const profileResponse = await fetch('http://127.0.0.1:5000/api/auth/profile', {
           method: 'GET',
@@ -40,11 +40,9 @@ function Profile() {
         if (chartsResponse.ok) {
           setSavedCharts(chartsData.charts || []);
         } else {
-          console.error('Error fetching saved charts:', chartsData.message);
-          setSavedCharts([]);
+          throw new Error(chartsData.message || 'Failed to fetch saved charts.');
         }
       } catch (err) {
-        console.error('Error:', err.message);
         setError(err.message || 'An error occurred. Please try again later.');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -54,8 +52,33 @@ function Profile() {
       }
     };
 
-    fetchData();
+    fetchProfileAndCharts();
   }, [navigate]);
+
+  const handleDelete = async (fileId) => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/chart/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ fileId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSavedCharts((prevCharts) => prevCharts.filter((chart) => chart.fileId !== fileId));
+      } else {
+        console.error('Failed to delete chart:', data.message);
+      }
+    } catch (err) {
+      console.error('An error occurred:', err.message);
+    }
+  };
 
   if (loading) {
     return (
@@ -101,6 +124,13 @@ function Profile() {
                   alt={`Chart ${chart.fileId}`}
                   className="img-fluid rounded"
                 />
+                <Button
+                  variant="danger"
+                  className="mt-2"
+                  onClick={() => handleDelete(chart.fileId)}
+                >
+                  Delete
+                </Button>
               </Card.Body>
             </Card>
           ))
