@@ -22,8 +22,8 @@
 .grid-item-2-svardist {
     grid-column: 1 / span 3; /* Take full width across all columns */
     display: flex;
-    justify-content: center; /* Center the dropdown */
-    align-items: center;
+    justify-content: left; /* Center the dropdown */
+    align-items: left;
 }
 
 /* Input Fields Section */
