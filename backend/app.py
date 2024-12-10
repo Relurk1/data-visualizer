@@ -269,6 +269,30 @@ def get_saved_charts(current_user_id):
         return jsonify({'charts': [{'fileId': file_id, 'chartUrl': chart_url} for file_id, chart_url in charts]}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/chart/delete', methods=['DELETE'])
+@token_required
+def delete_chart(current_user_id):
+    """
+    Deletes a specific saved chart for the logged-in user.
+    """
+    data = request.json
+    file_id = data.get('fileId')
+
+    if not file_id:
+        return jsonify({'error': 'File ID is required'}), 400
+
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM saved_charts WHERE user_id = ? AND file_id = ?', (current_user_id, file_id))
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': 'Chart deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
