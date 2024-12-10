@@ -11,6 +11,7 @@ function Box() {
   const [columns, setColumns] = useState([]); // State to store column names
   const [dropdown1, setDropdown1] = useState(''); // State for selected variable
   const [xLabel, setXLabel] = useState(''); // Custom X-axis label
+  const [yLabel, setYLabel] = useState(''); // Custom X-axis label
   const [graphTitle, setGraphTitle] = useState(''); // Custom graph title
   const [graphColor, setGraphColor] = useState('#000000'); // Default color: black
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function Box() {
       chartType: "box",
       x_col: dropdown1,
       x_label: xLabel, // Include custom X-axis label
+      y_label: yLabel,
       title: graphTitle, // Include custom graph title
       color: graphColor, // Include custom graph color
     };
@@ -61,7 +63,7 @@ function Box() {
         {/* Tracked Variable Dropdown */}
         <FormControl fullWidth margin="normal" className="grid-item-2-svardist" sx={{width: "100%",}}>
           <InputLabel>Tracked Variable</InputLabel>
-          <Select value={dropdown1} onChange={handleDropdown1Change} sx={{width: "100%", textAlign: "center",}}>
+          <Select value={dropdown1} onChange={handleDropdown1Change} sx={{width: "100%", textAlign: "left",}}>
             {columns.map((col, index) => (
               <MenuItem key={index} value={col}>{col}</MenuItem>
             ))}
@@ -71,7 +73,7 @@ function Box() {
         {/* Custom Graph Title */}
         <TextField
           label="Graph Title"
-          value={graphTitle}
+          value={graphTitle} 
           onChange={(e) => setGraphTitle(e.target.value)}
           fullWidth
           margin="normal"
@@ -84,6 +86,16 @@ function Box() {
           label="X-Axis Label"
           value={xLabel}
           onChange={(e) => setXLabel(e.target.value)}
+          fullWidth
+          margin="normal"
+          className="grid-item-3-svardist"
+        />
+
+          {/* Custom Y-Axis Label */}
+          <TextField
+          label="Y-Axis Label"
+          value={xLabel}
+          onChange={(e) => setYLabel(e.target.value)}
           fullWidth
           margin="normal"
           className="grid-item-3-svardist"
