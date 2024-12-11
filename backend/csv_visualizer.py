@@ -130,14 +130,21 @@ class CSVVisualizer:
                 color='red', linestyle='--', label='Line of Best Fit')
 
         elif self.chart_type == "bar":
-            plt.bar(self.df[self.x_col], self.df[self.y_col], color=self.color, label=self.legend)
+            aggregated_data = self.df.groupby(self.x_col)[self.y_col].mean()
+            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color,
+                    label=self.legend)
+            plt.xlabel(self.x_col)
+            plt.ylabel(f"Average {self.y_col}")
 
         elif self.chart_type == "histogram":
             plt.hist(self.df[self.x_col], bins=30, color=self.color, alpha=0.7, label=self.legend)
 
         elif self.chart_type == "box":
-            plt.boxplot(self.df[self.x_col], patch_artist=True, boxprops={"facecolor": self.color})
-            plt.xticks([1], [self.x_col])
+            aggregated_data = self.df.groupby(self.x_col)[self.y_col].mean()
+            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color,
+                    label=self.legend)
+            plt.xlabel(self.x_col)
+            plt.ylabel(f"Average {self.y_col}")
 
         elif self.chart_type == "pie":
             data_counts = self.df[self.x_col].value_counts()
