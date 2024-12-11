@@ -62,7 +62,7 @@ function Histogram() {
         {/* Tracked Variable Dropdown */}
         <FormControl fullWidth margin="normal" className="grid-item-2-svardist" sx={{width: "100%",}}>
           <InputLabel>Tracked Variable</InputLabel>
-          <Select value={dropdown1} onChange={handleDropdown1Change} sx={{width: "100%", textAlign: "center",}}>
+          <Select value={dropdown1} onChange={handleDropdown1Change} sx={{width: "100%", textAlign: "left",}}>
             {columns.map((col, index) => (
               <MenuItem key={index} value={col}>{col}</MenuItem>
             ))}

@@ -38,19 +38,37 @@ function Signup({ onSignupSuccess }) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Signup successful! Redirecting to your profile...');
+        setMessage('Signup successful! Logging you in...');
         setMessageType('success');
 
-        const user = { id: data.user?.id, name, email };
-        localStorage.setItem('user', JSON.stringify(user));
+        // Auto-login after successful signup
+        const loginResponse = await fetch('http://127.0.0.1:5000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-        if (onSignupSuccess) {
-          onSignupSuccess(user);
+        const loginData = await loginResponse.json();
+
+        if (loginResponse.ok) {
+          // Save token and user data to localStorage
+          localStorage.setItem('token', loginData.token);
+          localStorage.setItem('user', JSON.stringify(loginData.user));
+
+          if (onSignupSuccess) {
+            onSignupSuccess(loginData.user);
+          }
+
+          setTimeout(() => {
+            navigate('/profile'); // Redirect to profile
+          }, 1500);
+        } else {
+          setMessage('Signup successful, but login failed. Please log in manually.');
+          setMessageType('danger');
+          navigate('/login');
         }
-
-        setTimeout(() => {
-          navigate('/profile');
-        }, 1500);
       } else {
         setMessage(data.error || 'Signup failed! Please try again.');
         setMessageType('danger');
@@ -62,8 +80,9 @@ function Signup({ onSignupSuccess }) {
   };
 
   const clickLogIn = () => {
-    navigate("/login")
-  }
+    navigate('/login');
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="w-50 p-3 border bg-white rounded">
@@ -114,18 +133,27 @@ function Signup({ onSignupSuccess }) {
             />
           </Form.Group>
 
-          <Button variant="success" type="submit" className="mt-4 w-100" style={{backgroundColor: "var(--theme-color)"}}>
+          <Button
+            variant="success"
+            type="submit"
+            className="mt-4 w-100"
+            style={{ backgroundColor: 'var(--theme-color)' }}
+          >
             Sign Up
           </Button>
 
-          <Button variant="secondary" type="submit" className="mt-4 w-100" onClick={clickLogIn} style={{
-            backgroundColor: "white",
-            borderColor: "var(--theme-color)",
-            color: "var(--theme-color)"
-          }}>
-            Have an account?  Log in!
+          <Button
+            variant="secondary"
+            className="mt-4 w-100"
+            onClick={clickLogIn}
+            style={{
+              backgroundColor: 'white',
+              borderColor: 'var(--theme-color)',
+              color: 'var(--theme-color)',
+            }}
+          >
+            Have an account? Log in!
           </Button>
-
         </Form>
       </div>
     </div>
