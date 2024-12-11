@@ -131,8 +131,9 @@ class CSVVisualizer:
 
         elif self.chart_type == "bar":
             aggregated_data = self.df.groupby(self.x_col)[self.y_col].mean()
-            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color, label=self.legend)
-            plt.xlabel(self.x_col) 
+            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color,
+                    label=self.legend)
+            plt.xlabel(self.x_col)
             plt.ylabel(f"Average {self.y_col}")
 
         elif self.chart_type == "histogram":
@@ -140,8 +141,9 @@ class CSVVisualizer:
 
         elif self.chart_type == "box":
             aggregated_data = self.df.groupby(self.x_col)[self.y_col].mean()
-            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color, label=self.legend)
-            plt.xlabel(self.x_col) 
+            plt.bar(aggregated_data.index, aggregated_data.values, color=self.color,
+                    label=self.legend)
+            plt.xlabel(self.x_col)
             plt.ylabel(f"Average {self.y_col}")
 
         elif self.chart_type == "pie":
